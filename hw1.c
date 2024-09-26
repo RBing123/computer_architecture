@@ -37,6 +37,6 @@ int hamming_distance(uint32_t x, uint32_t y) {
 
 int main(void){
     printf("the hamming distance is : %d\n", hamming_distance(test_11, test_12));
-    printf("the hamming distance is : %d\n", hamming_distance(test_21, test_22);
-    printf("the hamming distance is : %d\n", hamming_distance(test_31, test_32);
+    printf("the hamming distance is : %d\n", hamming_distance(test_21, test_22));
+    printf("the hamming distance is : %d\n", hamming_distance(test_31, test_32));
 }
