@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <stdint.h>
 
-uint32_t test_11;
-uint32_t test_12;
-uint32_t test_21;
-uint32_t test_22;
-uint32_t test_31;
-uint32_t test_32;
+uint32_t test_11 = 0xFFFFFFFF;
+uint32_t test_12 = 0;
+uint32_t test_21 = 0x7FF00132;
+uint32_t test_22 = 0xCAE65324;
+uint32_t test_31 = 0x00028E20;
+uint32_t test_32 = 0x00001843;
     
 static inline int my_clz(uint32_t x) {
     int count = 0;
