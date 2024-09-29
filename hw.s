@@ -28,4 +28,18 @@ hamming_distance:
 
 # main function
 main:
+    addi sp, sp, -12 # 3 variables need to be saved
+
+    # store the data to stack
+    la t0, test_data_1
+    sw t0, 0(sp)
+    la t0, test_data_2
+    sw t0, 4(sp)
+    la t0, test_data_3
+    sw t0, 8(sp)
+
+    la a0, print_string
+    li a7, 4
+    ecall
+
 
