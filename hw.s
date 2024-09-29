@@ -7,11 +7,15 @@
 .text
 # clz function
 my_clz:
-    li t0, 0 # t0 is int count 
-    li t1, 31 # t1 is int i
+    addi sp, sp, -4      # return count
+    sw ra, 0(sp)         # save return address
+    addi t0, zero, 31    # init i=31
+    addi s0, zero, 1     # hold 1U
+    bgez t0, my_clz_loop
 
 my_clz_loop:
-    slli t2, a0, 1
+    sll t1, s0, t0
+    and 
     beqz t2, clz_finish
     addi t0, t0, 1 # count++
     addi t1, t1, -1 # i--
@@ -31,15 +35,24 @@ main:
     addi sp, sp, -12 # 3 variables need to be saved
 
     # store the data to stack
-    la t0, test_data_1
+    lw t0, test_data_1
     sw t0, 0(sp)
-    la t0, test_data_2
+    lw t0, test_data_2
     sw t0, 4(sp)
-    la t0, test_data_3
+    lw t0, test_data_3
     sw t0, 8(sp)
 
+    # initialize main loop
+    addi s0, zero, 3 # number of test cases
+    addi s1, zero, 1 # count of test case
+    addi s2, sp, 0 # point to test_data_1
+
+main_func:
     la a0, print_string
     li a7, 4
     ecall
+
+    lw a1, 0(sp)
+    
 
 
