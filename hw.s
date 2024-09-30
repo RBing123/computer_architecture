@@ -7,18 +7,21 @@
 .text
 # clz function
 my_clz:
-    addi sp, sp, -4      # return count
+    addi sp, sp, -8      # return count and hold 1U
     sw ra, 0(sp)         # save return address
+    mv s2, a0            # move input argument to saved register
     addi t0, zero, 31    # init i=31
     addi s0, zero, 1     # hold 1U
+    addi s1, zero, 0     # init count = 0
     bgez t0, my_clz_loop
 
 my_clz_loop:
-    sll t1, s0, t0
-    and 
+    sll t1, s0, t0       # (1U << i)
+    and a1, s2, t1       # x & (1U << i)
+    
     beqz t2, clz_finish
-    addi t0, t0, 1 # count++
-    addi t1, t1, -1 # i--
+    addi s1, s1, 1       # count++
+    addi t0, t0, -1      # i--
     bgez t0, my_clz_loop
 
 clz_finish:

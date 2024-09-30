@@ -2,7 +2,7 @@
 #include <stdint.h>
 
 uint32_t test_11 = 0xFFFFFFFF; // 32
-uint32_t test_12 = 0;
+uint32_t test_12 = 0x00000000;
 uint32_t test_21 = 0x7FF00132; // 14
 uint32_t test_22 = 0xCAE65324;
 uint32_t test_31 = 0x00028E20; // 9
