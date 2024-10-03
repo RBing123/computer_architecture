@@ -41,29 +41,30 @@ hamming_distance:
     addi t1, t1, 0          # hamming_count = 0
     mv a0, t0               # move data to a0 and call my_clz
     jal ra, my_clz          # jump and link to my_clz
-    
+
 
 # clz function
 my_clz:
     addi sp, sp, -8         # return count and hold 1U
     sw ra, 0(sp)            # save return address
-    mv s2, a0               # move input argument to saved register
-    addi t0, zero, 31       # init i=31
-    addi s0, zero, 1        # hold 1U
+    mv s0, a0               # move input argument to saved register
     addi s1, zero, 0        # init count = 0
-    bgez t0, my_clz_loop
+    addi t0, zero, 31       # init i=31
+    addi s2, zero, 1        # hold 1U
 
 my_clz_loop:
-    sll t1, s0, t0          # (1U << i)
-    and a1, s2, t1          # x & (1U << i)
+    sll t1, s2, t0          # (1U << i)
+    and t1, s0, t1          # x & (1U << i)
     
-    beqz t2, clz_finish
+    bnez t1, clz_finish     # if true break the loop
     addi s1, s1, 1          # count++
     addi t0, t0, -1         # i--
-    bgez t0, my_clz_loop
+    bnez t0, my_clz_loop    # loop
 
 clz_finish:
-    mv a0, t1
+    mv a0, s1               # count(s1) move to return register
+    lw ra, 0(sp)            # lw return address from 0(sp)
+    addi sp, sp, 8          # stack pointer
     ret
 
 main_func:
