@@ -1,20 +1,20 @@
 .data
-    test_data_1: .dword 0xFFFFFFFF, 0x00000000 # decimal is 4294967295 and 0, hamming distance is
-    test_data_2: .dword 0x7FF00132, 0xCAE65324 # decimal is 2146435378 and 3404092196, hamming distance is
-    test_data_3: .dword 0x00028E20, 0x00001843 # decimal is 167456 and 6211, hamming distance is
+    test_data_1: .word 0xFFFFFFFF, 0x00000000 # decimal is 4294967295 and 0, hamming distance is 32
+    test_data_2: .word 0x7FF00132, 0xCAE65324 # decimal is 2146435378 and 3404092196, hamming distance is 14
+    test_data_3: .word 0x00028E20, 0x00001843 # decimal is 167456 and 6211, hamming distance is 9
     print_string: .string
 
 .text
 main:
-    addi sp, sp, -12 # 3 variables need to be saved
+    addi sp, sp, -12                # 3 variables need to be saved
 
-    # store the data to stack
+    # store the data in stack
     lw t0, test_data_1
     sw t0, 0(sp)
-    lw t0, test_data_2
-    sw t0, 4(sp)
-    lw t0, test_data_3
-    sw t0, 8(sp)
+    lw t1, test_data_2
+    sw t1, 4(sp)
+    lw t2, test_data_3
+    sw t2, 8(sp)
 
     # initialize main loop
     addi s0, zero, 3 # number of test cases
