@@ -2,7 +2,7 @@
     test_data_1: .word 0xFFFFFFFF, 0x00000000 # decimal is 4294967295 and 0, hamming distance is 32
     test_data_2: .word 0x7FF00132, 0xCAE65324 # decimal is 2146435378 and 3404092196, hamming distance is 14
     test_data_3: .word 0x00028E20, 0x00001843 # decimal is 167456 and 6211, hamming distance is 9
-    print_string: .string
+    print_string: .string "\nHamming Distance is "
 
 .text
 main:
@@ -33,6 +33,23 @@ main:
     lw a0, 8(sp)            # load first number of the third pair
     lw a1, 12(sp)           # load second number
     jal ra, hamming_distance
+
+    # Print results
+    la a0, print_string     # Load print string address
+    li a7, 1                # System call for print integer
+
+    mv a1, t3               # Move first result to a1 for printing
+    ecall                   # Print the first Hamming distance
+
+    mv a1, t4               # Move second result to a1 for printing
+    ecall                   # Print the second Hamming distance
+
+    mv a1, t5               # Move third result to a1 for printing
+    ecall                   # Print the third Hamming distance
+
+    # Exit program
+    li a7, 10               # System call for exit
+    ecall
 
 # hamming distance
 hamming_distance:
@@ -91,13 +108,3 @@ clz_finish:
     lw ra, 0(sp)            # lw return address from 0(sp)
     addi sp, sp, 8          # stack pointer
     ret
-
-main_func:
-    la a0, print_string
-    li a7, 4
-    ecall
-
-    lw a1, 0(sp)
-    
-end_call:
-    ecall
