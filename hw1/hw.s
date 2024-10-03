@@ -36,12 +36,37 @@ main:
 
 # hamming distance
 hamming_distance:
-    addi sp, sp, -4         # Allocate memory for hamming_count on stack
+    addi sp, sp, -8         # Allocate memory for hamming_count on stack
+    sw ra, 0(sp)            # save return address
     xor t0, a0, a1          # diff = x ^ y
     addi t1, t1, 0          # hamming_count = 0
     mv a0, t0               # move data to a0 and call my_clz
     jal ra, my_clz          # jump and link to my_clz
 
+    # a0 involve with leading zero
+    mv t2, a0               # move leading zero from a0 to t2
+    sll t0, t0, t2          # remove leading zero
+    
+    # Calculate the number of remaining 1's in the diff
+    addi t3, t3, 32         # 32 bits
+    sub t3, t3, t2          # calculate 32 - leading zero
+
+hamming_count_loop:
+    beqz t3, hamming_done       # If t3 == 0, jump to done
+    andi t4, t0, 1              # t4 = diff & 1
+    beqz t4, skip_count         # If t4 == 0, skip counting
+    addi t1, t1, 1              # hamming_count++
+
+skip_count:
+    srl t0, t0, 1            # diff >>= 1 (shift right)
+    addi t3, t3, -1          # Decrease bit counter
+    j hamming_count_loop     # Repeat loop
+
+hamming_done:
+    mv a0, t1                # Move hamming_count to a0 (return value)
+    lw ra, 0(sp)             # Restore return address
+    addi sp, sp, 8           # Restore stack space
+    ret                      # Return from the function
 
 # clz function
 my_clz:
@@ -76,4 +101,3 @@ main_func:
     
 end_call:
     ecall
-
