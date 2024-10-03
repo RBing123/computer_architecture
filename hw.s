@@ -5,6 +5,22 @@
     print_string: .string
 
 .text
+main:
+    addi sp, sp, -12 # 3 variables need to be saved
+
+    # store the data to stack
+    lw t0, test_data_1
+    sw t0, 0(sp)
+    lw t0, test_data_2
+    sw t0, 4(sp)
+    lw t0, test_data_3
+    sw t0, 8(sp)
+
+    # initialize main loop
+    addi s0, zero, 3 # number of test cases
+    addi s1, zero, 1 # count of test case
+    addi s2, sp, 0 # point to test_data_1
+    
 # clz function
 my_clz:
     addi sp, sp, -8      # return count and hold 1U
@@ -34,21 +50,7 @@ hamming_distance:
     xor x2, x1, x2
 
 # main function
-main:
-    addi sp, sp, -12 # 3 variables need to be saved
 
-    # store the data to stack
-    lw t0, test_data_1
-    sw t0, 0(sp)
-    lw t0, test_data_2
-    sw t0, 4(sp)
-    lw t0, test_data_3
-    sw t0, 8(sp)
-
-    # initialize main loop
-    addi s0, zero, 3 # number of test cases
-    addi s1, zero, 1 # count of test case
-    addi s2, sp, 0 # point to test_data_1
 
 main_func:
     la a0, print_string
