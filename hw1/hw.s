@@ -20,35 +20,28 @@ main:
     addi s0, zero, 3        # number of test cases
     addi s1, zero, 1        # count of test case
     addi s2, sp, 0          # point to test_data_1
-    
+
+main_loop:    
+    # Print results
+    la a0, print_string     # Load print string address
+    li a7, 4                # System call for print integer
+    ecall
+
     # calculate hamming distance for each pair of data
     lw a0, 0(sp)            # load first number
     lw a1, 4(sp)            # load second number
     jal ra, hamming_distance
 
-    lw a0, 4(sp)            # load first number of next pair
-    lw a1, 8(sp)            # load second number
-    jal ra, hamming_distance
+    li a7, 1            # print integer
+    ecall               # print result of hd_cal (which is in a0)
 
-    lw a0, 8(sp)            # load first number of the third pair
-    lw a1, 12(sp)           # load second number
-    jal ra, hamming_distance
-
-    # Print results
-    la a0, print_string     # Load print string address
-    li a7, 4                # System call for print integer
-
-    mv a1, t3               # Move first result to a1 for printing
-    ecall                   # Print the first Hamming distance
-
-    mv a1, t4               # Move second result to a1 for printing
-    ecall                   # Print the second Hamming distance
-
-    mv a1, t5               # Move third result to a1 for printing
-    ecall                   # Print the third Hamming distance
+    addi s2, s2, 4      # s2 : points to next test_data
+    addi s1, s1, 1      # counter++
+    bne s1, s0, main_loop
 
     # Exit program
-    li a7, 10               # System call for exit
+    addi sp, sp, 12
+    li a7, 10
     ecall
 
 # hamming distance
