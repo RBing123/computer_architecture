@@ -11,14 +11,22 @@ main:
     # store the data in stack
     lw t0, test_data_1
     sw t0, 0(sp)
-    lw t1, test_data_2
-    sw t1, 4(sp)
-    lw t2, test_data_3
-    sw t2, 8(sp)
+    lw t0, test_data_1+4
+    sw t0, 4(sp)
+
+    lw t0, test_data_2
+    sw t0, 8(sp)
+    lw t0, test_data_2+4
+    sw t0, 12(sp)
+
+    lw t0, test_data_3
+    sw t0, 16(sp)
+    lw t0, test_data_3+4
+    sw t0, 20(sp)
 
     # initialize main loop
     addi s0, zero, 3        # number of test cases
-    addi s1, zero, 1        # count of test case
+    addi s1, zero, 2        # count of test case
     addi s2, sp, 0          # point to test_data_1
 
 main_loop:    
@@ -29,7 +37,7 @@ main_loop:
 
     # calculate hamming distance for each pair of data
     lw a0, 0(sp)            # load first number
-    lw a1, 4(sp)            # load second number
+    lw a1, 4(sp)          # load second number
     jal ra, hamming_distance
 
     li a7, 1            # print integer
@@ -48,32 +56,34 @@ main_loop:
 hamming_distance:
     addi sp, sp, -8         # Allocate memory for hamming_count on stack
     sw ra, 0(sp)            # save return address
-    xor t0, a0, a1          # diff = x ^ y
-    addi t1, t1, 0          # hamming_count = 0
-    mv a0, t0               # move data to a0 and call my_clz
+    xor s6, a0, a1          # diff = x ^ y
+    li t4, 0                # hamming_count = 0
+    mv a0, s6               # move data to a0 and call my_clz
     jal ra, my_clz          # jump and link to my_clz
 
     # a0 involve with leading zero
     mv t2, a0               # move leading zero from a0 to t2
-    sll t0, t0, t2          # remove leading zero
+    sll s6, s6, t2          # remove leading zero
     
     # Calculate the number of remaining 1's in the diff
-    addi t3, t3, 32         # 32 bits
-    sub t3, t3, t2          # calculate 32 - leading zero
+    addi t3, zero, 32        # 32 bits
+    sub t2, t3, t2          # calculate 32 - leading zero (for loop variable i)
+    li a3, 1                # hold 1
 
 hamming_count_loop:
-    beqz t3, hamming_done       # If t3 == 0, jump to done
-    andi t4, t0, 1              # t4 = diff & 1
-    beqz t4, skip_count         # If t4 == 0, skip counting
-    addi t1, t1, 1              # hamming_count++
+    beqz t2, hamming_done       # If t2 == 0, jump to done
+    sub s7, t3, t2              # 32-i
+    sll t6, a3, s7              # (1U << (32 - i))
+    and t6, s6, t6              # t6 = diff & 1U << (32 - i)
+    beqz t6, skip_count         # If t6 == 0, skip counting
+    addi t4, t4, 1              # hamming_count++
 
 skip_count:
-    srli t0, t0, 1            # diff >>= 1 (shift right)
-    addi t3, t3, -1          # Decrease bit counter
+    addi t2, t2, -1          # Decrease bit counter
     j hamming_count_loop     # Repeat loop
 
 hamming_done:
-    mv a0, t1                # Move hamming_count to a0 (return value)
+    mv a0, t4                # Move hamming_count to a0 (return value)
     lw ra, 0(sp)             # Restore return address
     addi sp, sp, 8           # Restore stack space
     ret                      # Return from the function
@@ -90,11 +100,14 @@ my_clz:
 my_clz_loop:
     sll t1, s2, t0          # (1U << i)
     and t1, s0, t1          # x & (1U << i)
-    
-    bnez t1, clz_finish     # if true break the loop
-    addi s1, s1, 1          # count++
-    addi t0, t0, -1         # i--
-    bnez t0, my_clz_loop    # loop
+
+    beqz t1, count          # if (x & (1U << i)) == 0, count++
+    j clz_finish
+
+count:
+    addi s1, s1, 1
+    addi t0, t0, -1
+    bgez t0, my_clz_loop
 
 clz_finish:
     mv a0, s1               # count(s1) move to return register

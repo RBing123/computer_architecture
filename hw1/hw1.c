@@ -31,6 +31,7 @@ int hamming_distance(uint32_t x, uint32_t y) {
         if (diff & (1U << (31 - i)))
             hamming_count++;
     }
+    
 
     return hamming_count;
 }
