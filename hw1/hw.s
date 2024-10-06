@@ -6,7 +6,7 @@
 
 .text
 main:
-    addi sp, sp, -12                # 3 variables need to be saved
+    addi sp, sp, -32                # 3 variables need to be saved
 
     # store the data in stack
     lw t0, test_data_1
@@ -25,9 +25,7 @@ main:
     sw t0, 20(sp)
 
     # initialize main loop
-    addi s0, zero, 3        # number of test cases
-    addi s1, zero, 2        # count of test case
-    addi s2, sp, 0          # point to test_data_1
+    addi s3, zero, 3        # number of test cases
 
 main_loop:    
     # Print results
@@ -43,12 +41,12 @@ main_loop:
     li a7, 1            # print integer
     ecall               # print result of hd_cal (which is in a0)
 
-    addi s2, s2, 4      # s2 : points to next test_data
-    addi s1, s1, 1      # counter++
-    bne s1, s0, main_loop
+    addi sp, sp, 8      # s2 : points to next test_data
+    addi s3, s3, -1      # counter++
+    bnez s3, main_loop
 
     # Exit program
-    addi sp, sp, 12
+    addi sp, sp, 32
     li a7, 10
     ecall
 
