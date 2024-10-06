@@ -75,7 +75,7 @@ hamming_count_loop:
     addi t1, t1, 1              # hamming_count++
 
 skip_count:
-    srl t0, t0, 1            # diff >>= 1 (shift right)
+    srli t0, t0, 1            # diff >>= 1 (shift right)
     addi t3, t3, -1          # Decrease bit counter
     j hamming_count_loop     # Repeat loop
 
