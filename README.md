@@ -8,6 +8,7 @@ Problem C in the quiz1 contains about count leading zero (CLZ). Counting leading
 
 ### Problem
 According to the above description, the CLZ problem is similar to calculating hamming distance.
+
 [leetcode 461. Hamming Distance](https://leetcode.com/problems/hamming-distance/description/)
 > Description : The Hamming distance between two integers is the number of positions at which the corresponding bits are different.
 > 
