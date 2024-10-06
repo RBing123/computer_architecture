@@ -36,7 +36,7 @@ main:
 
     # Print results
     la a0, print_string     # Load print string address
-    li a7, 1                # System call for print integer
+    li a7, 4                # System call for print integer
 
     mv a1, t3               # Move first result to a1 for printing
     ecall                   # Print the first Hamming distance
