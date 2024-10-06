@@ -24,3 +24,6 @@ Explanation:
 ```
 
 The above arrows point to positions where the corresponding bits are different.
+
+### Solution
+The Hamming distance between two integers is defined as the number of bit positions at which the corresponding bits are different. This can be calculated by performing a bitwise XOR operation on the two integers and then counting the number of '1's in the resulting binary number `diff`. Instead of directly counting all the '1's in `diff`, count the leading zeros using a function `my_clz`, which identifies how many irrelevant bits precede the first '1'. By shifting diff left by the number of leading zeros, we can eliminate these unnecessary bits and focus on the significant ones. Finally, iterate through the remaining bits of the shifted result to count the '1's, yielding the Hamming distance more efficiently by reducing the number of bits processed.
