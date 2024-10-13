@@ -1,5 +1,5 @@
 # Computer Architecture
-## Assignment1: Compute Hamming Distance with counting leading zero
+## Assignment1: RISC-V Assembly and Instruction Pipeline
 The assignment is implemented with [RISC-V](https://en.wikipedia.org/wiki/RISC-V) assembly code and [Ripes](https://github.com/mortbopet/Ripes)
 ### Analyze
 Problem C in the quiz1 contains about count leading zero (CLZ). Counting leading zeros is crucial in converting floating-point numbers, particularly in the context of normalization and precision representation.
