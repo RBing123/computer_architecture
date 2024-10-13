@@ -1,7 +1,7 @@
 .data
     test_data_1: .word 0xFFFFFFFF, 0x00000000 # decimal is 4294967295 and 0, hamming distance is 32
     test_data_2: .word 0x7FF00132, 0xCAE65324 # decimal is 2146435378 and 3404092196, hamming distance is 14
-    test_data_3: .word 0x00028E20, 0x00001843 # decimal is 167456 and 6211, hamming distance is 9
+    test_data_3: .word 0x00000000, 0x00000000 # decimal is 0 and 0, hamming distance is 0
     print_string: .string "\nHamming Distance is "
 
 .text
