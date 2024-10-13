@@ -5,8 +5,8 @@ uint32_t test_11 = 0xFFFFFFFF; // 32
 uint32_t test_12 = 0x00000000;
 uint32_t test_21 = 0x7FF00132; // 14
 uint32_t test_22 = 0xCAE65324;
-uint32_t test_31 = 0x00028E20; // 9
-uint32_t test_32 = 0x00001843;
+uint32_t test_31 = 0x00000000; // 0
+uint32_t test_32 = 0x00000000;
     
 static inline int my_clz(uint32_t x) {
     int count = 0;
