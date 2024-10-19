@@ -1,73 +1,73 @@
 .globl matmul
 
+.text
 matmul:
-    # a0: address of input matrix 1 (i * k)
-    # a1: address of input matrix 2 (k * j)
+    # prologue
+    addi sp, sp, -16          # Allocate stack space for 4 registers
+    sw ra, 12(sp)             # Save return address
+    sw s0, 8(sp)              # Save s0 if used
+    sw s1, 4(sp)              # Save s1 if used
+    sw s2, 0(sp)              # Save s2 if used
+
+    # a0: address of input matrix 1 (n * m)
+    # a1: address of input matrix 2 (m * k)
     # a2: output (output matrix pointer)
-    # a3: i (rows of matrix a)
-    # a4: k (cols of matrix a / rows of matrix b)
-    # a5: j (cols of matrix b)
+    # a3: n (rows of matrix a)
+    # a4: m (cols of matrix a / rows of matrix b)
+    # a5: k (cols of matrix b)
 
-    # m loop initialization
-    li t0, 0            # t0 = m = 0
+    # i loop initialization
+    li t0, 0            # t0: m = 0 for outer loop
 
-m_loop:
-    bge t0, a3, m_done  # if m >= i, exit loop
-    
-    # n loop initialization
-    li t1, 0            # t1 = n = 0
-
-n_loop:
-    bge t1, a4, n_done  # if n >= k, exit loop
-
-    # calculate address of a[m * k + n]
-    mul t2, t0, a4      # t2 = m * k
-    add t2, t2, t1      # t2 = m * k + n
-    slli t2, t2, 2      # t2 = (m * k + n) * 4 (each int is 4 bytes)
-    add t3, a0, t2      # t3 = &a[m * k + n]
-    lw t4, 0(t3)        # t4 = a[m * k + n], r = t4
+outer_loop:
+    bge t0, a3, outer_loop_done
 
     # l loop initialization
-    li t5, 0            # t5 = l = 0
+    li t1, 0            # t1: n = 0 for second_loop
+second_loop:
+    bge t1, a5, second_loop_done
 
-l_loop:
-    bge t5, a5, l_done  # if l >= j, exit loop
+    mul t2, t0, a4      # t2: m * k
+    add t2, t2, t1      # t2: m * k + n
+    slli t2, t2, 2      # t2: (m * k + n) * 4 (each int is 4 byte)
+    lw s0, t2(a0)       # s0: hold the matrix 1 element
+    
+    li t2, 0            # t2: l = 0 for inner_loop
 
-    # calculate output[m * j + l]
-    mul t6, t0, a5      # t6 = m * j
-    add t6, t6, t5      # t6 = m * j + l
-    slli t6, t6, 2      # t6 = (m * j + l) * 4
-    add t7, a2, t6      # t7 = &output[m * j + l]
-    lw t8, 0(t7)        # t8 = output[m * j + l]
+inner_loop:
+    bge t2, a5, inner_loop_done
 
-    # calculate b[n * j + l]
-    mul t9, t1, a5      # t9 = n * j
-    add t9, t9, t5      # t9 = n * j + l
-    slli t9, t9, 2      # t9 = (n * j + l) * 4
-    add t10, a1, t9     # t10 = &b[n * j + l]
-    lw t11, 0(t10)      # t11 = b[n * j + l]
+    mul t3, t1, a5      # t3: n * j
+    add t3, t3, t2      # t3: n * j + l
+    slli t3, t3, 2      # t3: (m * j + l) * 4 (each int is 4 byte)
+    lw s1, t3(a1)       # s1: hold the output element
 
-    # multiply and accumulate
-    mul t11, t11, t4    # t11 = r * b[n * j + l]
-    add t8, t8, t11     # t8 = output[m * j + l] + r * b[n * j + l]
-    sw t8, 0(t7)        # store back result
+    mul s0, s0, s1      # matrix 1 element * matrix 2 element
 
-    # increment l loop counter
-    addi t5, t5, 1      # l++
+    mul t4, t0, a6      # t4: m * j
+    add t4, t4, t2      # t4: m * j + l
+    slli t4, t4, 2      # t4: (m * j + l) * 4 (each int is 4 byte)
+    lw s2, t4(a2)       # s2: hold output element
 
-    j l_loop            # jump back to l_loop
+    add s2, s2, s0
 
-l_done:
-    # increment n loop counter
-    addi t1, t1, 1      # n++
+    addi t2, t2, 1      # l++
+    j inner_loop
 
-    j n_loop            # jump back to n_loop
+inner_loop_done:
+    addi t1, t1, 1
 
-n_done:
-    # increment m loop counter
-    addi t0, t0, 1      # m++
+    j second_loop
 
-    j m_loop            # jump back to m_loop
+second_loop_done:
+    addi t0, t0, 1
 
-m_done:
-    ret                 # return from function
+    j outer_loop
+outer_loop_done:
+    # epilogue
+    lw ra, 12(sp)
+    lw s0, 8(sp)            # Restore s0 if used
+    lw s1, 4(sp)            # Restore s1 if used
+    lw s2, 0(sp)            # Restore s2 if used
+    addi sp, sp, 16         # Deallocate stack space
+    ret
