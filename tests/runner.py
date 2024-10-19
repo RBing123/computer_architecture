@@ -1,12 +1,16 @@
 import json
 import subprocess
 import numpy as np
-import matplotlib.pyplot as plt
 from tensorflow.keras.datasets import mnist
 
 def load_tests(json_file):
     with open(json_file, 'r') as file:
         return json.load(file)
+
+def print_image(image):
+    for row in image:
+        line = "".join(["*" if pixel > (127/255) else " " for pixel in row])
+        print(line)
 
 def run_test(test):
     command = ['venus', test['test_file']] + test['args']  # Adjust this command as necessary
