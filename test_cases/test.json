@@ -1,0 +1,12 @@
+{
+    "tests": [
+        {
+            "name": "Test ReLU",
+            "id": "relu",
+            "test_file": "tests/assembly/relu.s",
+            "args": ["-it", "-ms", "-1"],
+            "stdout": "",
+            "exitcode": 0
+        }
+    ]
+}
