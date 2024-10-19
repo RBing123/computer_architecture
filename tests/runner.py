@@ -1,5 +1,8 @@
 import json
 import subprocess
+import numpy as np
+import matplotlib.pyplot as plt
+from tensorflow.keras.datasets import mnist
 
 def load_tests(json_file):
     with open(json_file, 'r') as file:
@@ -7,7 +10,7 @@ def load_tests(json_file):
 
 def run_test(test):
     command = ['venus', test['test_file']] + test['args']  # Adjust this command as necessary
-
+    print(command)
     try:
         # Run the command and capture the output
         result = subprocess.run(command, capture_output=True, text=True)
@@ -44,4 +47,8 @@ def main():
         print("----------------------------------------")
 
 if __name__ == "__main__":
+    (x_train, y_train), (x_test, y_test) = mnist.load_data()
+    
+    x_train = x_train.astype('float32') / 255
+    x_test = x_test.astype('float32') / 255
     main()
