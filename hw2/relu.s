@@ -16,8 +16,8 @@ relu:
     sw s1, 4(sp)
     sw s2, 0(sp)
 
-    mv s0, a0               # Save original a0 (matrix start address)
-    li t0, 0                # counter
+    mv s0, a0               # s0: Save original a0 (matrix start address)
+    li t0, 0                # t0: counter
 
 calculate_relu:    
     bge t0, a1, end_relu    # If we've processed n elements, end loop
