@@ -9,7 +9,7 @@ def load_tests(json_file):
 
 def print_image(image):
     for row in image:
-        line = "".join(["*" if pixel > (127/255) else " " for pixel in row])
+        line = "".join(["*" if pixel > 0.5 else " " for pixel in row])
         print(line)
 
 def run_test(test):
