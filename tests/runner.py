@@ -26,7 +26,7 @@ def run_test(test):
         return False, str(e)
 
 def main():
-    tests = load_tests('tests.json')  # Load tests from the JSON file
+    tests = load_tests('./test_cases/test.json')  # Load tests from the JSON file
 
     print("****************************************")
     for test in tests['tests']:
